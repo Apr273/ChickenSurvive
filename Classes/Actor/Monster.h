@@ -16,17 +16,23 @@ public:
 
 public:
 	void show();//显示怪物
-	void hide();//隐藏怪物
+	void die();//隐藏怪物
 	void reset();
 	bool isAlive();
 	void setTiledMap(TMXTiledMap* map);
 	bool isCollideWith(Entity* entity);
-	//void hit(int damage);
+	void hurt(int damage);
+	void bindPlayer(Player* player);
+	void attack(Entity* entity);
 	//virtual void hit(int damage, float flyingDegree, bool isCriticalStrike);//怪物受到伤害
 private:
 	bool m_isAlive;
-	Player* player;
 	TMXTiledMap* m_map;
 	TMXLayer* meta;//检测碰撞的地图图层
+	Player* m_player;
+	static const int m_initHp = 30;
+	int m_Hp=m_initHp;
+	Sprite* sprite;
+	Bullet* monster_bullet;
 };
 

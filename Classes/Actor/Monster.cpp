@@ -1,53 +1,41 @@
 #include "Monster.h"
+#include"Weapon/MonsterBullet.h"
+
 Monster::Monster() 
 {
-	m_isAlive = false;
+	m_isAlive =true;
 }
 
 Monster::~Monster(){}
 
 bool Monster::init()
 {
-	auto sprite = Sprite::create("MonsterD1.png");
+	sprite = Sprite::create("MonsterD1.png");
 	bindSprite(sprite);
+	m_Hp = m_initHp;
 	return true;
 }
-//bool Monster::isCollideWithPlayer(Player* player)
-//{
-//	/*获取碰撞检查对象的boundingBox*/
-//	Rect entityRect = player->getBoundingBox();
-//
-//	Point monsterPos = getPosition();
-//
-//	/*判断boundingBox和怪物中心点是否有交集*/
-//	return entityRect.containsPoint(monsterPos);
-//	
-//}
-//bool Monster::hitByBullet(Bullet* bullet)
-//{
-//	Rect entityRect = bullet->getBoundingBox();
-//
-//	Point monsterPos = getPosition();
-//	/*判断boundingBox和怪物中心点是否有交集*/
-//	return getBoundingBox().intersectsRect(bullet->getBoundingBox());
-//}
-void Monster::show()
-{
-	if (getSprite() != NULL)
-	{
-		setVisible(true);//设置可见
-		m_isAlive = true;//标记怪物为活动状态
-	}
-}
 
-void Monster::hide() 
+//void Monster::show()
+//{
+//	if (getSprite() != NULL)
+//	{
+//		setVisible(true);//设置可见
+//		m_isAlive = true;//标记怪物为活动状态
+//	}
+//}
+
+void Monster::die() 
 {
 	if (getSprite() != NULL)
 	{
+		//auto fade = FadeTo::create(1.0f, 0);//消失至某一透明度
+		//this->getSprite()->runAction(fade);
 		auto actionRemove = RemoveSelf::create();
 		this->runAction(actionRemove);
 		//reset();
 		m_isAlive = false;//标记怪物为非活动状态
+
 	}
 }
 
@@ -55,7 +43,7 @@ void Monster::reset()
 {
 	if (getSprite() != NULL)
 	{
-		setPosition(Point(CCRANDOM_0_1()*1000, CCRANDOM_0_1()*1000));
+		setPosition(Point(100+CCRANDOM_0_1()*800, 100+CCRANDOM_0_1()*600));
 	}
 }
 
@@ -78,28 +66,35 @@ bool Monster::isCollideWith(Entity* entity)
 	return getBoundingBox().intersectsRect(entity->getBoundingBox());
 }
 
-//bool Monster::hit(Bullet* bullet)
-//{
-//	/*获取碰撞检查对象的boundingBox*/
-//	Rect entityRect = bullet->getBoundingBox();
-//
-//	Point monsterPos = getPosition();
-//
-//	/*判断boundingBox和怪物中心点是否有交集*/
-//	return entityRect.containsPoint(monsterPos);
-//}
+void Monster::attack(Entity* entity)
+{
+	monster_bullet = MonsterBullet::create();
+	monster_bullet->setPosition(this->getPosition());//子弹位置
+	monster_bullet->setScale(0.5f);//子弹大小
+	this->addChild(monster_bullet);
 
-//bool Monster::isCollideWithPlayer(Player* player)
-//{
-//	/*获取碰撞检测对象的boundingBox*/
-//	if (player != NULL)
-//	{
-//		Rect entityRect = player->getBoundingBox();
-//		Point monsterPos = getPosition();
-//		return entityRect.containsPoint(monsterPos);
-//	}
-//}
+	auto actionMove = MoveBy::create(0.2+3.0* CCRANDOM_0_1(), Vec2(-50+CCRANDOM_0_1()*100, -50 + CCRANDOM_0_1() * 100));
+	auto actionRemove = RemoveSelf::create();
+	monster_bullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
 
+}
+
+void Monster::hurt(int damage)
+{
+	if (m_Hp > 0)
+	{
+		this->m_Hp -= damage;
+	}
+	else
+	{
+		die();
+	}
+}
+
+void Monster::bindPlayer(Player* player)
+{
+	m_player = player;
+}
 //void Monster::hit(int damage)
 //{
 //	/*if (!m_isAlive)
