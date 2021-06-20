@@ -9,8 +9,8 @@ Player::Player()
 bool Player::init()
 {
     m_isjumping = false;
-
-    m_iHP = 1000;
+    m_iHP = 600;
+    m_iGrade = 0;
     return true;
 }
 void Player::run(char m_Direction)
@@ -147,42 +147,33 @@ Point Player::tileCoordForPosition(Point pos) {
     return Point(x, y);
 }
 
-
 void Player::hit()
 {
-    log("hit()");
     if (getSprite() == NULL)
     {
         return;
     }
-
     ///*扣血飘字特效*/
     //FlowWord* flowWord = FlowWord::create();
-    m_iHP -= 15;
+    m_iHP -= 50;
     if (m_iHP < 0)
     {
         m_iHP = 0;
     }
-
-    ///*创建几种动作对象*/
-    //auto backMove = MoveBy::create(0.1f, Point(-20, 0));
-    //auto forwardMove = MoveBy::create(0.1f, Point(20, 0));
-    //auto backRotate = RotateBy::create(0.1f, -5, 0);
-    //auto forwardRotate = RotateBy::create(0.1f, 5, 0);
-
-    ///*分别组合成两种动作*/
-    //auto backActions = Spawn::create(backMove, backRotate, NULL);
-    //auto forwardActions = Spawn::create(forwardMove, forwardRotate, NULL);
-
-    //auto actions = Sequence::create(backActions, forwardActions, NULL);
-
-    //stopAllActions();/*先停止所有正在执行的动作*/
-    //resetData();/*重置数据*/
-    //runAction(actions);
 }
 int Player::getiHP()
 {
     return this->m_iHP;
+}
+
+int Player::getiGrade()
+{
+    return m_iGrade;
+}
+void Player::setiGrade(int grade)
+{
+    
+    this->m_iGrade +=grade;
 }
 
 void Player::resetData()
@@ -204,6 +195,37 @@ bool Player::isCollideWith(Entity* entity)
     //return entityRect.containsPoint(playerPos);
     return getBoundingBox().intersectsRect(entity->getBoundingBox());
 }
+
+
+//std::vector<Bullet*> Player:: getBullet(int bullet_type)
+//{ 
+//    if (0 == bullet_type)
+//    {
+//       
+//        auto numberBullet = m_numberBullets;
+//        for (auto m_bullet : numberBullet)
+//        {
+//            bullets.push_back(m_bullet);
+//        }
+//    }
+//    else if (1 == bullet_type)
+//    {
+//        auto powerBullet = m_powerBullets;
+//        for (auto m_bullet : powerBullet)
+//        {
+//            bullets.push_back(m_bullet);
+//        }
+//    }
+//    else if (2 == bullet_type)
+//    {
+//        auto speedBullet = m_speedBullets;
+//        for (auto m_bullet : speedBullet)
+//        {
+//            bullets.push_back(m_bullet);
+//        }
+//    }
+//    return bullets;
+//}
 
 //std::vector<Bullet*> Player::getBullet()
 //{

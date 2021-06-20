@@ -1,4 +1,4 @@
-#include "MyScene.h"
+#include "MyScene/MyScene.h"
 #include "MonsterManager.h"
 
 USING_NS_CC;

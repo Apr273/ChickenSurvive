@@ -4,9 +4,6 @@ bool DirectionController::init()
 {
 	this->m_XSpeed = 0;
 	this->m_YSpeed = 0;
-	////注册键盘操控事件
-	//registeKeyboardEvent();
-	//registeMouseEvent();
 	//每一帧开启update函数调用
 	this->scheduleUpdate();
 	return true;
@@ -16,7 +13,7 @@ void DirectionController::onEnter()
 {
 	Node::onEnter();
 	registeKeyboardEvent();
-	registeMouseEvent();
+	//registeMouseEvent();
 }
 
 void DirectionController::onExit()
@@ -70,9 +67,9 @@ void DirectionController::setYSpeed(int iSpeed)
 	this->m_YSpeed = iSpeed;
 }
 
-void DirectionController::setPlayer(Player* myPlayer)
+void DirectionController::setPlayer(Player* m_player)
 {
-	this->m_Player = myPlayer;
+	this->m_Player = m_player;
 }
 
 void DirectionController::registeKeyboardEvent()
@@ -117,31 +114,31 @@ void DirectionController::registeKeyboardEvent()
 
 }
 
-void DirectionController::registeMouseEvent()
+void DirectionController::setBullet(Bullet* bullet)
 {
-	//创建事件监听器，监听鼠标事件
-	auto myMouseListener = EventListenerMouse::create();
-	//当鼠标被按下
-	myMouseListener->onMouseDown = [=](Event* event)
-	{
-		mybullet = Bullet::create();
-		mybullet->setPosition(m_Player->getPosition());//子弹位置
-		mybullet->setScale(0.5f);//子弹大小
-		this->addChild(mybullet);
-		EventMouse* e = (EventMouse*)event;
-		//找到位置使得子弹射出屏幕外
-		Vec2 mouseLocation = Point(e->getCursorX(), e->getCursorY());
-		Vec2 offset = mouseLocation - m_Player->getPosition();
-		offset.normalize();
-		auto shootAmount = offset * 1000;
-		auto realDest = shootAmount + m_Player->getPosition();
-
-		auto actionMove = MoveTo::create(2.0f, realDest);
-		auto actionRemove = RemoveSelf::create();
-		mybullet->runAction(Sequence::create(actionMove, actionRemove, nullptr));
-		/*MoveTo* moveTo = MoveTo::create(0.25f,Point(e->getCursorX(),e->getCursorY()));
-		bullet->runAction(moveTo);*/
-	};
-	//将事件监听器与场景绑定
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(myMouseListener, this);
+	m_bullet = bullet;
 }
+
+//void registeMouseEvent()
+//{
+//	//创建事件监听器，监听鼠标事件
+//	auto myMouseListener = EventListenerMouse::create();
+//	//当鼠标被按下
+//	myMouseListener->onMouseDown = [=](Event* event)
+//	{
+//		m_bullet = addBullet();
+//		m_bullet->setPosition(m_player->getPosition());//子弹位置
+//		m_bullet->setScale(0.5f);//子弹大小
+//		this->addChild(m_bullet);
+//		EventMouse* e = (EventMouse*)event;
+//		//找到位置使得子弹射出屏幕外
+//		Vec2 mouseLocation = Point(e->getCursorX(), e->getCursorY());
+//		Vec2 offset = mouseLocation - m_player->getPosition();
+//		offset.normalize();
+//		auto shootAmount = offset * 1000;
+//		auto realDest = shootAmount + m_player->getPosition();
+//		m_bullet->shoot(realDest);
+//	};
+//	//将事件监听器与场景绑定
+//	_eventDispatcher->addEventListenerWithSceneGraphPriority(myMouseListener, this);
+//}
